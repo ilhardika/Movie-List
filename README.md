@@ -4,7 +4,7 @@ Aplikasi Movie List adalah aplikasi CRUD (Create, Read, Update, Delete) yang mem
 
 ## Figma
 
-Aplikasi ini dibuat menggunakan Figma sebagai desain dasar. Link Figma dapat ditemukan di: [Link Figma](https://www.figma.com/design/JCOg3cOCUOed3rdEUaXrtS/Movie-Web-App?node-id=0-1&node-type=canvas&t=J2IQS3rrFChdS1xI-0).
+[Link Figma](https://www.figma.com/design/JCOg3cOCUOed3rdEUaXrtS/Movie-Web-App?node-id=1-3&t=J2IQS3rrFChdS1xI-4).
 
 ## Fitur
 
