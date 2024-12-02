@@ -2,6 +2,10 @@
 
 Aplikasi Movie List adalah aplikasi CRUD (Create, Read, Update, Delete) yang memungkinkan pengguna untuk menambahkan, melihat, dan mengelola daftar film. Aplikasi ini menggunakan React untuk antarmuka pengguna dan mengakses API film untuk mendapatkan data film.
 
+## Figma
+
+Aplikasi ini dibuat menggunakan Figma sebagai desain dasar. Link Figma dapat ditemukan di: [Link Figma](https://www.figma.com/design/JCOg3cOCUOed3rdEUaXrtS/Movie-Web-App?node-id=0-1&node-type=canvas&t=J2IQS3rrFChdS1xI-0).
+
 ## Fitur
 
 - Menampilkan daftar film populer menggunakan API dari TMDb (The Movie Database)
