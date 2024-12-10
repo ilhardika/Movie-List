@@ -10,7 +10,7 @@ import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import MovieCRUD from "./components/MovieCRUD";
 import Login from "./components/Login";
-import UserInfo from "./components/UserInfo"; // Pastikan ini diimpor dengan benar
+import UserInfo from "./components/UserInfo";
 import Logout from "./components/Logout";
 
 const App = () => {

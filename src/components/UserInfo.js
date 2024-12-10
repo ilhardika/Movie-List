@@ -1,7 +1,6 @@
 import React from "react";
 
 const UserInfo = ({ user }) => {
-  // Jika tidak ada user, tampilkan pesan
   if (!user) {
     return (
       <div className="container mt-5">

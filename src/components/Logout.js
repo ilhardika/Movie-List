@@ -5,10 +5,8 @@ const Logout = ({ setUser }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Hapus user state
     setUser(null);
 
-    // Redirect ke halaman login
     navigate("/login");
   }, [setUser, navigate]);
 

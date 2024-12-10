@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = ({ user, setUser }) => {
   const handleLogout = () => {
-    setUser(null); // Menghapus user dari state
+    setUser(null);
   };
 
   return (

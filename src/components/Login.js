@@ -10,25 +10,19 @@ const Login = ({ setUser }) => {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    // Validasi sederhana
     if (username === "123" && password === "123") {
-      // Berhasil login
       const userInfo = {
         username: username,
-        id: Date.now(), // ID unik sederhana
+        id: Date.now(),
         loginTime: new Date().toLocaleString(),
       };
 
-      // Set user di parent component
       setUser(userInfo);
 
-      // Hapus error sebelumnya
       setError("");
 
-      // Redirect ke halaman user info
       navigate("/user-info");
     } else {
-      // Login gagal
       setError("Username atau password salah");
       setUser(null);
     }
