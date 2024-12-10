@@ -52,7 +52,7 @@ const App = () => {
   };
 
   return (
-    <div className="bg-dark text-white">
+    <div id="main-wrapper" className="bg-dark text-white">
       <Router>
         <Navbar user={user} setUser={setUser} />
         <Routes>
