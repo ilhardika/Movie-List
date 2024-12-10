@@ -12,6 +12,7 @@ Aplikasi Movie List adalah aplikasi CRUD (Create, Read, Update, Delete) yang mem
 - Menambahkan film baru ke dalam daftar
 - Deskripsi film yang dipersingkat dengan tanda "..." untuk teks yang terlalu panjang
 - Navigasi antar halaman menggunakan React Router
+- Menu "User Info" yang hanya muncul jika pengguna sudah login
 
 ## Teknologi yang Digunakan
 
@@ -51,3 +52,5 @@ Aplikasi Movie List adalah aplikasi CRUD (Create, Read, Update, Delete) yang mem
 2. Klik pada menu untuk mengakses halaman CRUD.
 3. Tambahkan film baru dengan mengisi form yang tersedia.
 4. Film yang baru ditambahkan akan muncul di urutan pertama daftar film.
+5. Menu "User Info" akan muncul jika Anda sudah login.
+   Insert
