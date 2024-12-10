@@ -40,7 +40,7 @@ const Login = ({ setUser }) => {
               <form onSubmit={handleLogin}>
                 <div className="mb-3">
                   <label htmlFor="username" className="form-label">
-                    Username
+                    Username = 123
                   </label>
                   <input
                     type="text"
@@ -53,7 +53,7 @@ const Login = ({ setUser }) => {
                 </div>
                 <div className="mb-3">
                   <label htmlFor="password" className="form-label">
-                    Password
+                    Password = 123
                   </label>
                   <input
                     type="password"
