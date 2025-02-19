@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import Home from "./components/Home";
@@ -15,7 +11,8 @@ import useMovies from "./hooks/useMovies";
 
 const App = () => {
   const [user, setUser] = useState(null);
-  const { movies, loading, error, addMovie, editMovie, deleteMovie } = useMovies();
+  const { movies, loading, error, addMovie, editMovie, deleteMovie } =
+    useMovies();
 
   if (loading) {
     return <div className="container mt-5">Loading...</div>;

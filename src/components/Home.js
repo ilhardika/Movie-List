@@ -1,4 +1,5 @@
 import React from "react";
+import { Star, Calendar, Clock } from "lucide-react";
 
 const Home = ({ movies }) => {
   const truncateText = (text, maxLength) => {
@@ -9,33 +10,100 @@ const Home = ({ movies }) => {
   };
 
   return (
-    <div>
+    <div className="bg-dark text-white">
       {/* Hero Section */}
-      <header className="bg-dark text-white py-5 px-3">
-        <div className="container">
-          <h1 className="mb-3">Welcome to Layarkaca 21</h1>
-          <p className="mb-3">
-            Discover and enjoy the best movies from around the world.
-          </p>
+      <header
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("https://image.tmdb.org/t/p/original' +
+            (movies[0]?.backdrop_path || "") +
+            '")',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          height: "70vh",
+          position: "relative",
+        }}
+      >
+        <div className="container h-100 d-flex flex-column justify-content-center">
+          <div className="row">
+            <div className="col-md-8">
+              <h1 className="display-4 fw-bold mb-4">Welcome to Layar 21</h1>
+              <p className="lead mb-4">
+                Discover the latest and greatest movies from around the world.
+                Your ultimate destination for entertainment.
+              </p>
+              <button className="btn btn-danger btn-lg px-5">
+                Explore Movies
+              </button>
+            </div>
+          </div>
         </div>
       </header>
 
       {/* Popular Movies Section */}
       <div className="container py-5">
-        <h2 className="mb-4">Popular Movies</h2>
-        <div className="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+        <h2 className="fw-bold mb-4">Popular Movies</h2>
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
           {movies.map((movie) => (
             <div className="col" key={movie.id}>
-              <div className="card h-100">
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  className="card-img-top"
-                  alt={movie.title}
-                />
-                <div className="card-body">
-                  <h5 className="card-title">{movie.title}</h5>
-                  <p className="card-text">
-                    {truncateText(movie.overview, 100)}
+              <div
+                className="card bg-dark h-100 border-0"
+                style={{
+                  transition: "transform 0.3s ease",
+                  cursor: "pointer",
+                  height: "100%",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.03)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
+              >
+                <div style={{ position: "relative", paddingTop: "150%" }}>
+                  <img
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    className="card-img-top"
+                    alt={movie.title}
+                    style={{
+                      borderRadius: "12px",
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <div className="position-absolute top-0 end-0 m-2">
+                    <span className="badge bg-warning text-dark d-flex align-items-center gap-1">
+                      <Star size={14} />
+                      {movie.vote_average.toFixed(1)}
+                    </span>
+                  </div>
+                </div>
+                <div className="card-body px-0 pt-3">
+                  <h5
+                    className="card-title fw-bold mb-2"
+                    style={{ minHeight: "48px" }}
+                  >
+                    {movie.title}
+                  </h5>
+                  <div className="d-flex gap-3 text-muted mb-2">
+                    <small className="d-flex align-items-center">
+                      <Calendar size={14} className="me-1" />
+                      {new Date(movie.release_date).getFullYear()}
+                    </small>
+                    <small className="d-flex align-items-center">
+                      <Clock size={14} className="me-1" />
+                      {Math.floor(movie.vote_count / 100)}k votes
+                    </small>
+                  </div>
+                  <p
+                    className="card-text text-muted"
+                    style={{ height: "60px", overflow: "hidden" }}
+                  >
+                    {truncateText(movie.overview, 80)}
                   </p>
                 </div>
               </div>
@@ -43,6 +111,17 @@ const Home = ({ movies }) => {
           ))}
         </div>
       </div>
+
+      {/* Footer Section */}
+      <footer className="container py-5">
+        <div className="row">
+          <div className="col-12 text-center">
+            <p className="text-muted">
+              © 2025 Layarkaca 21. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
