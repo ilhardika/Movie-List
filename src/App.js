@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
 } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
@@ -12,44 +11,19 @@ import MovieCRUD from "./components/MovieCRUD";
 import Login from "./components/Login";
 import UserInfo from "./components/UserInfo";
 import Logout from "./components/Logout";
+import useMovies from "./hooks/useMovies";
 
 const App = () => {
-  const [movies, setMovies] = useState([]);
   const [user, setUser] = useState(null);
+  const { movies, loading, error, addMovie, editMovie, deleteMovie } = useMovies();
 
-  useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const response = await fetch(
-          "https://api.themoviedb.org/3/movie/popular?api_key=77a199c572fedbadace9e7f4786b2afd&language=en-US&page=1"
-        );
-        const data = await response.json();
-        setMovies(data.results);
-      } catch (error) {
-        console.error("Error fetching movies:", error);
-      }
-    };
+  if (loading) {
+    return <div className="container mt-5">Loading...</div>;
+  }
 
-    fetchMovies();
-  }, []);
-
-  const addMovie = (movie) => {
-    setMovies((prevMovies) => [movie, ...prevMovies]);
-  };
-
-  const editMovie = (updatedMovie) => {
-    setMovies((prevMovies) =>
-      prevMovies.map((movie) =>
-        movie.id === updatedMovie.id ? updatedMovie : movie
-      )
-    );
-  };
-
-  const deleteMovie = (movieId) => {
-    setMovies((prevMovies) =>
-      prevMovies.filter((movie) => movie.id !== movieId)
-    );
-  };
+  if (error) {
+    return <div className="container mt-5 text-danger">{error}</div>;
+  }
 
   return (
     <div id="main-wrapper" className="bg-dark text-white">
@@ -57,10 +31,9 @@ const App = () => {
         <Navbar user={user} setUser={setUser} />
         <Routes>
           <Route path="/login" element={<Login setUser={setUser} />} />
-          <Route
-            path="/"
-            element={user ? <Home movies={movies} /> : <Navigate to="/login" />}
-          />
+          {/* Home accessible without login */}
+          <Route path="/" element={<Home movies={movies} />} />
+          {/* CRUD operations require login */}
           <Route
             path="/crud"
             element={
@@ -74,6 +47,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          {/* User info requires login */}
           <Route
             path="/user-info"
             element={
