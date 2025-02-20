@@ -1,12 +1,63 @@
-import React, { useState } from "react";
-import { Modal, Button } from "react-bootstrap";
+import React, { useState, useMemo } from "react";
+import { Modal, Button, Form } from "react-bootstrap";
+import {
+  Plus,
+  Edit2,
+  Trash2,
+  Film,
+  X,
+  Search,
+  ChevronUp,
+  ChevronDown,
+} from "lucide-react";
 
 const MovieCRUD = ({ movies, addMovie, editMovie, deleteMovie }) => {
   const [title, setTitle] = useState("");
   const [overview, setOverview] = useState("");
   const [posterPath, setPosterPath] = useState("");
   const [editingMovieId, setEditingMovieId] = useState(null);
-  const [showModal, setShowModal] = useState(false); // State untuk mengontrol tampilan modal
+  const [showModal, setShowModal] = useState(false);
+
+  // Table state
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortField, setSortField] = useState("title");
+  const [sortDirection, setSortDirection] = useState("asc");
+  const itemsPerPage = 5;
+
+  // Filter and sort movies
+  const filteredAndSortedMovies = useMemo(() => {
+    return [...movies]
+      .filter(
+        (movie) =>
+          movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          movie.overview.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .sort((a, b) => {
+        const aValue = a[sortField]?.toString().toLowerCase();
+        const bValue = b[sortField]?.toString().toLowerCase();
+        return sortDirection === "asc"
+          ? aValue?.localeCompare(bValue)
+          : bValue?.localeCompare(aValue);
+      });
+  }, [movies, searchTerm, sortField, sortDirection]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredAndSortedMovies.length / itemsPerPage);
+  const currentMovies = filteredAndSortedMovies.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // Sorting handler
+  const handleSort = (field) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,7 +82,7 @@ const MovieCRUD = ({ movies, addMovie, editMovie, deleteMovie }) => {
     setOverview("");
     setPosterPath("");
     setEditingMovieId(null);
-    setShowModal(false); // Menutup modal setelah selesai
+    setShowModal(false);
   };
 
   const handleEdit = (movie) => {
@@ -39,139 +90,201 @@ const MovieCRUD = ({ movies, addMovie, editMovie, deleteMovie }) => {
     setOverview(movie.overview);
     setPosterPath(movie.poster_path);
     setEditingMovieId(movie.id);
-    setShowModal(true); // Menampilkan modal saat mengedit
+    setShowModal(true);
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Add Movie</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Image (TMDB URL)</label>
-          <input
-            type="text"
-            className="form-control"
-            value={posterPath}
-            onChange={(e) => setPosterPath(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Title</label>
-          <input
-            type="text"
-            className="form-control"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Overview</label>
-          <textarea
-            className="form-control"
-            value={overview}
-            onChange={(e) => setOverview(e.target.value)}
-            required
-          />
-        </div>
-
-        <button type="submit" className="btn btn-secondary">
-          {editingMovieId ? "Update Movie" : "Add Movie"}
+    <div className="container py-5">
+      {/* Header Section */}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="fw-bold m-0">Movie Management</h2>
+        <button
+          className="btn btn-danger d-flex align-items-center gap-2"
+          onClick={() => setShowModal(true)}
+        >
+          <Plus size={18} />
+          Add New Movie
         </button>
-      </form>
+      </div>
 
-      {/* Movie List */}
-      <h2 className="mt-5">Movie List</h2>
-      <table className="table table-dark mt-3">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Overview</th>
-            <th>Poster</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {movies.map((movie) => (
-            <tr key={movie.id}>
-              <td>{movie.id}</td>
-              <td>{movie.title}</td>
-              <td>{movie.overview}</td>
-              <td>
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt={movie.title}
-                  style={{ width: "50px" }}
-                />
-              </td>
-              <td>
-                <button
-                  className="btn btn-warning"
-                  onClick={() => handleEdit(movie)}
-                  title="Edit"
-                >
-                  <i className="fas fa-edit"></i> {/* Ikon Edit */}
-                </button>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => deleteMovie(movie.id)}
-                  title="Delete"
-                >
-                  <i className="fas fa-trash"></i> {/* Ikon Delete */}
-                </button>
-              </td>
+      {/* Search Bar */}
+      <div className="mb-4">
+        <div className="input-group">
+          <span className="input-group-text bg-dark border-secondary">
+            <Search size={18} className="text-light" />
+          </span>
+          <input
+            type="text"
+            className="form-control bg-dark text-white border-secondary"
+            placeholder="Search movies..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="table-responsive">
+        <table className="table table-dark table-hover">
+          <thead>
+            <tr>
+              <th
+                onClick={() => handleSort("title")}
+                style={{ cursor: "pointer" }}
+              >
+                Title{" "}
+                {sortField === "title" &&
+                  (sortDirection === "asc" ? (
+                    <ChevronUp size={14} />
+                  ) : (
+                    <ChevronDown size={14} />
+                  ))}
+              </th>
+              <th
+                onClick={() => handleSort("overview")}
+                style={{ cursor: "pointer" }}
+              >
+                Overview{" "}
+                {sortField === "overview" &&
+                  (sortDirection === "asc" ? (
+                    <ChevronUp size={14} />
+                  ) : (
+                    <ChevronDown size={14} />
+                  ))}
+              </th>
+              <th>Poster</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {currentMovies.map((movie) => (
+              <tr key={movie.id}>
+                <td>{movie.title}</td>
+                <td>
+                  {movie.overview.length > 100
+                    ? `${movie.overview.substring(0, 100)}...`
+                    : movie.overview}
+                </td>
+                <td>
+                  <img
+                    src={`https://image.tmdb.org/t/p/w92${movie.poster_path}`}
+                    alt={movie.title}
+                    style={{ width: "46px", borderRadius: "4px" }}
+                  />
+                </td>
+                <td>
+                  <div className="d-flex gap-2">
+                    <button
+                      className="btn btn-warning btn-sm d-flex align-items-center gap-1"
+                      onClick={() => handleEdit(movie)}
+                    >
+                      <Edit2 size={14} />
+                      Edit
+                    </button>
+                    <button
+                      className="btn btn-danger btn-sm d-flex align-items-center gap-1"
+                      onClick={() => deleteMovie(movie.id)}
+                    >
+                      <Trash2 size={14} />
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      {/* Modal for Editing Movie */}
-      <Modal show={showModal} onHide={resetForm}>
-        <Modal.Header className="bg-dark text-white" closeButton>
-          <Modal.Title>
-            {editingMovieId ? "Edit Movie" : "Add Movie"}
+      {/* Pagination */}
+      <div className="d-flex justify-content-between align-items-center mt-4">
+        <div className="text-light">
+          Showing {Math.min(currentMovies.length, itemsPerPage)} of{" "}
+          {filteredAndSortedMovies.length} entries
+        </div>
+        <div className="d-flex gap-2">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              className={`btn btn-sm ${
+                currentPage === page ? "btn-danger" : "btn-outline-secondary"
+              }`}
+              onClick={() => setCurrentPage(page)}
+            >
+              {page}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Modal */}
+      <Modal show={showModal} onHide={resetForm} centered size="lg">
+        <Modal.Header
+          className="border-0 bg-dark text-white"
+          closeButton
+          closeVariant="white"
+        >
+          <Modal.Title className="d-flex align-items-center gap-2">
+            <Film size={24} className="text-danger" />
+            {editingMovieId ? "Edit Movie" : "Add New Movie"}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="bg-dark text-white">
-          <form onSubmit={handleSubmit} className="bg-dark text-white">
-            <div className="mb-3">
-              <label className="form-label">Image (TMDB URL)</label>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label className="form-label text-light">Poster Image URL</label>
               <input
                 type="text"
-                className="form-control"
+                className="form-control bg-dark text-white border-secondary"
                 value={posterPath}
                 onChange={(e) => setPosterPath(e.target.value)}
+                placeholder="Enter TMDB poster path"
                 required
               />
             </div>
-            <div className="mb-3">
-              <label className="form-label">Title</label>
+            <div className="mb-4">
+              <label className="form-label text-light">Movie Title</label>
               <input
                 type="text"
-                className="form-control"
+                className="form-control bg-dark text-white border-secondary"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                placeholder="Enter movie title"
                 required
               />
             </div>
-            <div className="mb-3">
-              <label className="form-label">Overview</label>
+            <div className="mb-4">
+              <label className="form-label text-light">Overview</label>
               <textarea
-                className="form-control"
+                className="form-control bg-dark text-white border-secondary"
                 value={overview}
                 onChange={(e) => setOverview(e.target.value)}
+                placeholder="Enter movie overview"
+                rows="4"
                 required
               />
             </div>
-            <Button
-              variant="primary"
-              type="submit"
-              className="btn btn-secondary"
-            >
-              {editingMovieId ? "Update Movie" : "Add Movie"}
-            </Button>
+            <div className="d-flex justify-content-end gap-2">
+              <Button
+                variant="outline-light"
+                onClick={resetForm}
+                className="d-flex align-items-center gap-2"
+              >
+                <X size={18} />
+                Cancel
+              </Button>
+              <Button
+                variant="danger"
+                type="submit"
+                className="d-flex align-items-center gap-2"
+              >
+                <Plus size={18} />
+                {editingMovieId ? "Update Movie" : "Add Movie"}
+              </Button>
+            </div>
           </form>
         </Modal.Body>
       </Modal>
