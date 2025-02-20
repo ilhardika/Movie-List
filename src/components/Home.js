@@ -82,30 +82,6 @@ const Home = ({ movies }) => {
                     </span>
                   </div>
                 </div>
-                <div className="card-body px-0 pt-3">
-                  <h5
-                    className="card-title fw-bold mb-2"
-                    style={{ minHeight: "48px" }}
-                  >
-                    {movie.title}
-                  </h5>
-                  <div className="d-flex gap-3 text-muted mb-2">
-                    <small className="d-flex align-items-center">
-                      <Calendar size={14} className="me-1" />
-                      {new Date(movie.release_date).getFullYear()}
-                    </small>
-                    <small className="d-flex align-items-center">
-                      <Clock size={14} className="me-1" />
-                      {Math.floor(movie.vote_count / 100)}k votes
-                    </small>
-                  </div>
-                  <p
-                    className="card-text text-muted"
-                    style={{ height: "60px", overflow: "hidden" }}
-                  >
-                    {truncateText(movie.overview, 80)}
-                  </p>
-                </div>
               </div>
             </div>
           ))}
@@ -116,7 +92,7 @@ const Home = ({ movies }) => {
       <footer className="container py-5">
         <div className="row">
           <div className="col-12 text-center">
-            <p className="text-muted">
+            <p className="text-light">
               © 2025 Layarkaca 21. All rights reserved.
             </p>
           </div>
